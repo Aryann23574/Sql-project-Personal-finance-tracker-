@@ -1,0 +1,44 @@
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    Department VARCHAR(30)
+);
+
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50)
+);
+
+CREATE TABLE Grades (
+    GradeID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    Marks INT,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+
+INSERT INTO Students VALUES
+(1,'Aryan','IT'),
+(2,'Rahul','IT'),
+(3,'Priya','CS');
+
+INSERT INTO Courses VALUES
+(101,'DBMS'),
+(102,'Java');
+
+INSERT INTO Grades VALUES
+(1,1,101,85),
+(2,1,102,90),
+(3,2,101,75),
+(4,2,102,80),
+(5,3,101,95),
+(6,3,102,88);
+
+SELECT s.StudentName,
+       AVG(g.Marks) AS AverageMarks,
+       RANK() OVER (ORDER BY AVG(g.Marks) DESC) AS StudentRank
+FROM Students s
+JOIN Grades g
+ON s.StudentID = g.StudentID
+GROUP BY s.StudentName;
